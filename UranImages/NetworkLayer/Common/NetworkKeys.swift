@@ -11,9 +11,5 @@ import Foundation
 struct NetworkKeys {
     static let page = "page"
     static let perPage = "per_page"
-}
-
-struct PaginationKey: APIRequestParameters {
-    let page: Int
-    let per_page: Int
+    static let query = "query"
 }

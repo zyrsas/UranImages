@@ -11,11 +11,12 @@ import Moya
 private struct Keys {
     static let baseUrl = "https://api.unsplash.com/"
     static let apiKey = "4c9fbfbbd92c17a2e95081cec370b4511659666240eb4db9416c40c641ee843b"
+    static let clientId = "Client-ID"
 }
 
 enum PhotosAPI {
-    case photos(PaginationKey)
-    case searchPhotos
+    case photos(PhotosKey)
+    case searchPhotos(SearchKey)
 }
 
 extension PhotosAPI: TargetType {
@@ -43,20 +44,25 @@ extension PhotosAPI: TargetType {
     
     public var task: Task {
         switch self {
-        case .photos(let pagination):
+        case .photos(let photosKey):
             return .requestParameters(parameters: [
-                                                    NetworkKeys.page: pagination.page,
-                                                    NetworkKeys.perPage: pagination.per_page
+                                                    NetworkKeys.page: photosKey.page,
+                                                    NetworkKeys.perPage: photosKey.per_page
                                                     ],
-                                      encoding: JSONEncoding.default)
-        case .searchPhotos:
-            return .requestPlain
+                                      encoding: URLEncoding.default)
+        case .searchPhotos(let searchKey):
+            return .requestParameters(parameters: [
+                                                    NetworkKeys.page: searchKey.page,
+                                                    NetworkKeys.perPage: searchKey.per_page,
+                                                    NetworkKeys.query: searchKey.query
+                                                    ],
+                                      encoding: URLEncoding.queryString)
         }
     }
     
     public var headers: [String : String]? {
         return [
-                "Authorization": "Client-ID \(Keys.apiKey)"
+            "Authorization": "\(Keys.clientId) \(Keys.apiKey)"
                 ]
     }
     

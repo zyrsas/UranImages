@@ -7,3 +7,19 @@
 //
 
 import Foundation
+
+protocol Pagination {
+    var page: Int { get set }
+    var per_page: Int { get set }
+}
+
+struct PhotosKey: Pagination, APIRequestParameters {
+    var page: Int
+    var per_page: Int
+}
+
+struct SearchKey: Pagination, APIRequestParameters {
+    var page: Int
+    var per_page: Int
+    var query: String
+}

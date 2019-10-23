@@ -7,3 +7,10 @@
 //
 
 import Foundation
+
+protocol BaseDelegate: class {
+    func showActivityIndicator()
+    func hideActivityIndicator()
+    func showAlertView(title: String, message: String)
+    func reloadDataWith(_ items: [Photo])
+}

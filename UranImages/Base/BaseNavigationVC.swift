@@ -6,4 +6,12 @@
 //  Copyright © 2019 Sasha. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+class BaseNavigationVC: UINavigationController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationBar.isTranslucent = false
+    }
+}

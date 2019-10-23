@@ -7,53 +7,126 @@
 //
 
 import UIKit
+import DeepDiff
 
 class SearchVC: BaseVC {
     
-    lazy var searchController: UISearchController = {
+    // MARK: - UI Elements
+    
+    private lazy var searchController: UISearchController = {
         let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self
-        searchController.searchBar.searchBarStyle = UISearchBar.Style.minimal
-        let textFieldInsideSearchBar = searchController.searchBar.value(forKey: "searchField") as? UITextField
-        textFieldInsideSearchBar?.textColor = UIColor.white
-        let attributes:[NSAttributedString.Key: Any] = [NSAttributedString.Key.foregroundColor: UIColor.white,
-                                                        NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)]
-        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes(attributes, for: .normal)
+        searchController.searchBar.searchBarStyle = .minimal
         searchController.searchBar.placeholder = "Search..."
         searchController.searchBar.keyboardAppearance = .dark
-        searchController.searchBar.showsCancelButton = true
         searchController.searchBar.delegate = self
-        searchController.searchBar.backgroundColor = .lightGray
+        searchController.obscuresBackgroundDuringPresentation = false
         return searchController
     }()
+    
+    private lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.backgroundColor = .clear
+        collectionView.register(ImageCell.self, forCellWithReuseIdentifier: ImageCell.identity)
+        return collectionView
+    }()
+    
+    // MARK: - Variables
+    
+    private let viewModel = SearchVM()
+    
+    // MARK: - Life cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        viewModel.bind(self)
+    }
+    
+    // MARK: - Setup Constrain
+    
+    override func setupConstraint() {
+        view.addSubview(collectionView)
+           
+        collectionView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.right.equalToSuperview().offset(-15)
+            make.left.equalToSuperview().offset(15)
+        }
+    }
+    
+    // MARK: - Setup UI
+    
+    override func setupUI() {
+        super.setupUI()
+        title = "Search"
+        self.navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+    
+    @objc
+    func perfomSearch(_ searchText: String) {
+        viewModel.searchByQuery(searchText)
     }
 }
 
-extension SearchVC: UISearchControllerDelegate, UISearchResultsUpdating, UISearchBarDelegate {
-    func updateSearchResults(for searchController: UISearchController) {
-//        if self.getListTask != nil {
-//            self.getListTask?.cancel()
-//        }
-//        self.getListTask = DispatchWorkItem.init(block: {
-//            self.viewModel?.getList(searchController.searchBar.text ?? "")
-//        })
-//        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: self.getListTask!)
+ // MARK: - CollectionView Delegate
+
+extension SearchVC: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = FullScreenVC.newInstance(photo: viewModel.getPhotoByIndexPath(indexPath))
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+// MARK: - CollectionView Flow Delegate
+
+extension SearchVC: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return viewModel.getCellSize(collectionView, indexPath: indexPath)
+    }
+}
+
+// MARK: - CollectionView Data Source
+
+extension SearchVC: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel.numberOfItems()
     }
     
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-      //  hideSearch()
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        return viewModel.getCellInstance(collectionView, indexPath: indexPath)
     }
     
-    func presentSearchController(_ searchController: UISearchController) {
-        searchController.searchBar.becomeFirstResponder()
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        viewModel.getNewPage(collectionView, indexPath: indexPath, query: searchController.searchBar.text ?? "")
+    }
+}
+
+// MARK: - Search Delegate
+
+extension SearchVC: UISearchBarDelegate {    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.count < 3 { return }
+        NSObject.cancelPreviousPerformRequests(withTarget: self)
+        perform(#selector(perfomSearch(_:)), with: searchText, afterDelay: 0.4)
+    }
+}
+
+// MARK: - Base Delegate
+
+extension SearchVC: BaseDelegate {
+    func reloadDataWith(_ items: [Photo]) {
+        let changes = diff(old: viewModel.getPhotos(), new: items)
+        self.collectionView.reload(changes: changes, updateData: {
+            viewModel.setPhotos(photos: items)
+        })
     }
     
-    func didPresentSearchController(_ searchController: UISearchController) {
-        searchController.searchBar.becomeFirstResponder()
+    func showAlertView(title: String, message: String) {
+        showAlert(title: title, message: message)
     }
 }

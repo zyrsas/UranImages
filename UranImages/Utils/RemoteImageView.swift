@@ -10,12 +10,33 @@ import UIKit
 
 class RemoteImageView: UIImageView {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+    private let imageCache = NSCache<NSString, UIImage>()
+    
+    func imageFromServerURL(_ URLString: String, placeHolder: UIImage? = nil) {
+        self.image = nil
+        if let cachedImage = imageCache.object(forKey: NSString(string: URLString)) {
+            self.image = cachedImage
+            return
+        }
 
+        if let url = URL(string: URLString) {
+            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+                if error != nil {
+                    DispatchQueue.main.async {
+                        self.image = placeHolder
+                    }
+                    return
+                }
+                DispatchQueue.main.async {
+                    if let data = data {
+                        if let downloadedImage = UIImage(data: data) {
+                            self.imageCache.setObject(downloadedImage, forKey: NSString(string: URLString))
+                            self.image = downloadedImage
+                        }
+                    }
+                }
+            }).resume()
+        }
+    }
+    
 }

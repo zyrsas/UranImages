@@ -9,7 +9,7 @@
 import Moya
 
 struct NetworkAdapter {
-    static let provider = MoyaProvider<PhotosAPI>()
+    static let provider = MoyaProvider<PhotosAPI>(plugins: [NetworkLoggerPlugin(verbose: true)])
     
     static func request(target: PhotosAPI, success successCallback: @escaping (Response) -> Void, error errorCallback: @escaping (Swift.Error) -> Void, failure failureCallback: @escaping (MoyaError) -> Void) {
         
