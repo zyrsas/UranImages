@@ -23,7 +23,6 @@
 		FA810BCE235DC539003D7023 /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA810BCD235DC539003D7023 /* BaseCell.swift */; };
 		FA810BD0235DC760003D7023 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA810BCF235DC760003D7023 /* MainVC.swift */; };
 		FA810BD2235DC770003D7023 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA810BD1235DC770003D7023 /* SearchVC.swift */; };
-		FA810BD4235DD3F3003D7023 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA810BD3235DD3F3003D7023 /* Main.storyboard */; };
 		FA810BD6235DD48F003D7023 /* BaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA810BD5235DD48F003D7023 /* BaseVC.swift */; };
 		FA810BD8235DDEA2003D7023 /* BaseNavigationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA810BD7235DDEA2003D7023 /* BaseNavigationVC.swift */; };
 		FAB2B119235E0A1B00A6E1DD /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2B118235E0A1B00A6E1DD /* NetworkService.swift */; };
@@ -54,7 +53,6 @@
 		FA810BCD235DC539003D7023 /* BaseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
 		FA810BCF235DC760003D7023 /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		FA810BD1235DC770003D7023 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
-		FA810BD3235DD3F3003D7023 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		FA810BD5235DD48F003D7023 /* BaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVC.swift; sourceTree = "<group>"; };
 		FA810BD7235DDEA2003D7023 /* BaseNavigationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationVC.swift; sourceTree = "<group>"; };
 		FAB2B118235E0A1B00A6E1DD /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -175,7 +173,6 @@
 				FA810BAF235DB265003D7023 /* Assets.xcassets */,
 				FA810BB1235DB265003D7023 /* LaunchScreen.storyboard */,
 				FA810BB4235DB265003D7023 /* Info.plist */,
-				FA810BD3235DD3F3003D7023 /* Main.storyboard */,
 			);
 			path = UranImages;
 			sourceTree = "<group>";
@@ -384,7 +381,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA810BD4235DD3F3003D7023 /* Main.storyboard in Resources */,
 				FA810BB3235DB265003D7023 /* LaunchScreen.storyboard in Resources */,
 				FA810BB0235DB265003D7023 /* Assets.xcassets in Resources */,
 			);
